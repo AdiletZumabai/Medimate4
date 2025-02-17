@@ -14,6 +14,10 @@ from email.mime.text import MIMEText
 from twilio.rest import Client
 from threading import Timer
 from datetime import datetime, timedelta
+from flask_cors import CORS
+CORS(app)
+
+load_dotenv()
 # Twilio Credentials
 TWILIO_SID = os.getenv("TWILIO_SID")
 TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
@@ -24,7 +28,7 @@ EMAIL_USER = os.getenv("EMAIL_USER")
 EMAIL_PASS = os.getenv("EMAIL_PASS")
 # Load environment variables
 
-load_dotenv()
+
 
 api_key = os.getenv("OPENAI_API_KEY")
 
