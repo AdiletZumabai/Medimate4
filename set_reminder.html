@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Reminder - MediMate</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: #fff;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 26px;
+        }
+
+        .icon {
+            width: 60px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            text-align: left;
+            font-weight: 500;
+            margin-top: 10px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            box-sizing: border-box;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            border: 2px solid #4CAF50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .pill-icons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .pill-icons img {
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .pill-icons img:hover {
+            transform: scale(1.2);
+        }
+
+        .selected-pill {
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://cdn-icons-png.flaticon.com/128/883/883356.png" alt="Medication Icon" class="icon">
+        <h1>Set a Medication Reminder</h1>
+        
+        <form method="POST" action="{{ url_for('set_reminder') }}">
+            <label for="medication_name">Medication Name:</label>
+    <input type="text" id="medication_name" name="medication_name" required placeholder="Enter medication name">
+
+    <label for="reminder_time">Reminder Time:</label>
+    <input type="time" id="reminder_time" name="reminder_time" required>
+
+    <label for="frequency">Frequency:</label>
+    <select id="frequency" name="frequency">
+        <option value="daily">Every Day</option>
+        <option value="alternate">Every Other Day</option>
+        <option value="weekly">Once a Week</option>
+    </select>
+
+            <label for="email">Email (optional for notifications):</label>
+            <input type="email" id="email" name="email" placeholder="Enter email">
+        
+            <label for="phone">Phone (optional for SMS):</label>
+            <input type="tel" id="phone" name="phone" placeholder="Enter phone number">
+
+            <label>Select Pill Icon:</label>
+            <div class="pill-icons">
+                <img src="https://cdn-icons-png.flaticon.com/128/3050/3050576.png" alt="Pill 1" class="pill-icon" onclick="selectPill(this)">
+                <img src="https://cdn-icons-png.flaticon.com/128/2769/2769882.png" alt="Pill 2" class="pill-icon" onclick="selectPill(this)">
+                <img src="https://cdn-icons-png.flaticon.com/128/609/609803.png" alt="Pill 3" class="pill-icon" onclick="selectPill(this)">
+            </div>
+
+            <button type="submit">Set Reminder</button>
+        </form>
+        <a href="/dashboard" class="back-link">Back to Dashboard</a>
+    </div>
+
+    <audio id="reminderSound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+
+    <script>
+        function selectPill(element) {
+            document.querySelectorAll('.pill-icon').forEach(img => img.classList.remove('selected-pill'));
+            element.classList.add('selected-pill');
+        }
+
+        document.getElementById("reminderForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            const reminderTime = document.getElementById("reminder_time").value;
+            const [hour, minute] = reminderTime.split(":");
+
+            const now = new Date();
+            const reminderDate = new Date();
+            reminderDate.setHours(hour, minute, 0, 0);
+
+            if (reminderDate < now) {
+                reminderDate.setDate(now.getDate() + 1);
+            }
+
+            const timeDiff = reminderDate.getTime() - now.getTime();
+
+            setTimeout(() => {
+                document.getElementById("reminderSound").play();
+                alert("Time to take your medication!");
+            }, timeDiff);
+            
+            alert("Reminder set successfully!");
+        });
+    </script>
+    <script>
+        document.getElementById("reminderForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+    
+            const medicationName = document.getElementById("medication_name").value;
+            const reminderTime = document.getElementById("reminder_time").value;
+            const frequency = document.getElementById("frequency").value;
+            const email = document.getElementById("email").value;
+            const phone = document.getElementById("phone").value;
+    
+            fetch("http://localhost:5000/set-reminder", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ medicationName, reminderTime, frequency, email, phone })
+            })
+            .then(response => response.json())
+            .then(data => alert(data.message))
+            .catch(error => console.error("Error:", error));
+        });
+    </script>
+</body>
+</html>

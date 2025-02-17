@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Appointments - MediMate</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #E3F2FD;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1565C0;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .appointment-list {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .appointment-card {
+            background: #fff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .appointment-card:hover {
+            transform: scale(1.03);
+        }
+
+        .doctor-name {
+            font-weight: bold;
+            color: #0D47A1;
+        }
+
+        .appointment-date {
+            color: #666;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background-color: #1976D2;
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 8px;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .back-button:hover {
+            background-color: #0D47A1;
+        }
+
+        .tips {
+            text-align: center;
+            margin-top: 40px;
+            font-style: italic;
+            color: #555;
+            background: #ffffff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Your Appointments</h1>
+    <div class="appointment-list">
+        {% for appointment in appointments %}
+        <div class="appointment-card">
+            <span class="doctor-name">{{ appointment.doctor_name }}</span>
+            <span class="appointment-date">{{ appointment.datetime }}</span>
+        </div>
+        {% else %}
+        <div class="appointment-card">
+            <span>No appointments scheduled.</span>
+        </div>
+        {% endfor %}
+    </div>
+    <a href="/dashboard" class="back-button">Back to Dashboard</a>
+    <div class="tips">
+        <p>Tip: Arrive 10 minutes early for your appointment.</p>
+    </div>
+</body>
+</html>
